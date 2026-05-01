@@ -28,8 +28,14 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
+def _to_csrf_origin(host: str) -> str:
+    # Django needs a wildcard form for subdomain matches, e.g. "https://*.onrender.com"
+    if host.startswith('.'):
+        return f'https://*{host}'
+    return f'https://{host}'
+
 CSRF_TRUSTED_ORIGINS = [
-    f'https://{h}' for h in ALLOWED_HOSTS if h not in {'localhost', '127.0.0.1'}
+    _to_csrf_origin(h) for h in ALLOWED_HOSTS if h not in {'localhost', '127.0.0.1'}
 ]
 
 
@@ -106,7 +112,7 @@ STORAGES = {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
     },
 }
 

@@ -1,0 +1,388 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name }} | {{ title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'portfolio/css/style.css' %}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">BR</a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#publications">Research</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#contact">Contact</a>
+                <a href="{% url 'download_resume' %}" class="btn-nav">Resume</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-bg-pattern"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">Available for opportunities</div>
+                <h1 class="hero-name">{{ name }}</h1>
+                <p class="hero-title">{{ title }}</p>
+                <p class="hero-summary">{{ summary }}</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">8+</span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">IEEE / ASME Papers</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">15+</span>
+                        <span class="stat-label">IoT Use Cases</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">6</span>
+                        <span class="stat-label">Awards</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <a href="#contact" class="btn btn-primary">Get in Touch</a>
+                    <a href="{% url 'download_resume' %}" class="btn btn-outline">Download Resume</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <p class="section-subtitle">A bit about who I am and what I do</p>
+            <div class="about-grid">
+                <div class="about-photo-wrap">
+                    <img src="/media/{{ formal_photo|urlencode }}"
+                         alt="{{ name }} — formal portrait"
+                         class="about-photo"
+                         loading="lazy">
+                </div>
+                <div class="about-text">
+                    <p class="about-lead">{{ summary }}</p>
+                    <ul class="about-highlights">
+                        {% for item in about_highlights %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 5rem;">Skills & Expertise</h2>
+            <p class="section-subtitle">Technologies and tools I work with</p>
+            <div class="skills-grid">
+                {% for category, items in skills.items %}
+                <div class="skill-card">
+                    <h3 class="skill-category">{{ category }}</h3>
+                    <div class="skill-tags">
+                        {% for skill in items %}
+                        <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="section section-alt" id="experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <p class="section-subtitle">My professional journey</p>
+            <div class="timeline">
+                {% for job in experience %}
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div>
+                                <h3 class="timeline-role">{{ job.role }}</h3>
+                                <p class="timeline-company">{{ job.company }}</p>
+                            </div>
+                            <div class="timeline-meta">
+                                <span class="timeline-period">{{ job.period }}</span>
+                                <span class="timeline-location">{{ job.location }}</span>
+                            </div>
+                        </div>
+                        <ul class="timeline-points">
+                            {% for point in job.points %}
+                            <li>{{ point }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <h2 class="section-title" style="margin-top: 4rem;">Education</h2>
+            <div class="education-grid">
+                {% for edu in education %}
+                <div class="education-card">
+                    <div class="education-period">{{ edu.period }}</div>
+                    <h3 class="education-degree">{{ edu.degree }}</h3>
+                    <p class="education-school">{{ edu.school }} - {{ edu.location }}</p>
+                    <span class="education-result">{{ edu.result }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section" id="projects">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <p class="section-subtitle">Key projects I've built and delivered</p>
+            <div class="projects-grid">
+                {% for project in projects %}
+                <div class="project-card">
+                    <div class="project-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="project-name">{{ project.name }}</h3>
+                    <p class="project-desc">{{ project.desc }}</p>
+                    <div class="project-tags">
+                        {% for tag in project.tags %}
+                        <span class="project-tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications Section -->
+    <section class="section section-alt" id="publications">
+        <div class="container">
+            <h2 class="section-title">Publications</h2>
+            <p class="section-subtitle">Research papers published in IEEE and ASME conferences</p>
+            <div class="publications-list">
+                {% for pub in publications %}
+                <div class="publication-item">
+                    <div class="publication-number">{{ forloop.counter }}</div>
+                    <p class="publication-text">{{ pub }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Awards Section -->
+    <section class="section" id="awards">
+        <div class="container">
+            <h2 class="section-title">Awards & Recognition</h2>
+            <div class="awards-grid">
+                {% for award in awards %}
+                <div class="award-card">
+                    <div class="award-year">{{ award.year }}</div>
+                    <h3 class="award-title">{{ award.title }}</h3>
+                    <p class="award-desc">{{ award.desc }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery / Slider Section -->
+    <section class="section section-alt" id="gallery">
+        <div class="container">
+            <h2 class="section-title">Conferences & Awards</h2>
+            <p class="section-subtitle">Highlights from presentations, conferences, and award moments</p>
+            <div class="slider" id="slider">
+                <div class="slider-track" id="sliderTrack">
+                    {% for item in gallery %}
+                    <div class="slide" style="--bg-image: url('/media/{{ item.file|urlencode }}');">
+                        <img src="/media/{{ item.file|urlencode }}"
+                             alt="{{ item.title }}"
+                             loading="lazy">
+                        <div class="slide-caption">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.caption }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="slider-btn slider-prev" id="sliderPrev" aria-label="Previous slide">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="slider-btn slider-next" id="sliderNext" aria-label="Next slide">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <div class="slider-dots" id="sliderDots">
+                    {% for item in gallery %}
+                    <button class="slider-dot{% if forloop.first %} active{% endif %}" data-index="{{ forloop.counter0 }}" aria-label="Go to slide {{ forloop.counter }}"></button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section section-dark" id="contact">
+        <div class="container">
+            <h2 class="section-title light">Let's Connect</h2>
+            <p class="section-subtitle light">I'm always open to discussing new opportunities and ideas</p>
+            <div class="contact-grid">
+                <a href="mailto:{{ email }}" class="contact-card">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span class="contact-label">Email</span>
+                    <span class="contact-value">{{ email }}</span>
+                </a>
+                <a href="tel:{{ phone }}" class="contact-card">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <span class="contact-label">Phone</span>
+                    <span class="contact-value">{{ phone }}</span>
+                </a>
+                <div class="contact-card">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span class="contact-label">Location</span>
+                    <span class="contact-value">{{ location }}</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 {{ name }}. Built with Django.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Mobile nav toggle
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.querySelector('.nav-links').classList.remove('active');
+                    document.getElementById('navToggle').classList.remove('active');
+                }
+            });
+        });
+
+        // Animate on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.skill-card, .timeline-item, .project-card, .publication-item, .award-card, .education-card, .contact-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ===== Gallery Slider =====
+        (function() {
+            const track = document.getElementById('sliderTrack');
+            if (!track) return;
+            const slides = track.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('#sliderDots .slider-dot');
+            const prevBtn = document.getElementById('sliderPrev');
+            const nextBtn = document.getElementById('sliderNext');
+            const total = slides.length;
+            if (!total) return;
+
+            let index = 0;
+            let autoTimer = null;
+
+            function goTo(i) {
+                index = (i + total) % total;
+                track.style.transform = `translateX(-${index * 100}%)`;
+                dots.forEach((d, di) => d.classList.toggle('active', di === index));
+            }
+
+            function next() { goTo(index + 1); }
+            function prev() { goTo(index - 1); }
+
+            function startAuto() {
+                stopAuto();
+                autoTimer = setInterval(next, 5000);
+            }
+            function stopAuto() {
+                if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+            }
+
+            nextBtn.addEventListener('click', () => { next(); startAuto(); });
+            prevBtn.addEventListener('click', () => { prev(); startAuto(); });
+            dots.forEach(d => d.addEventListener('click', () => {
+                goTo(parseInt(d.dataset.index, 10));
+                startAuto();
+            }));
+
+            const slider = document.getElementById('slider');
+            slider.addEventListener('mouseenter', stopAuto);
+            slider.addEventListener('mouseleave', startAuto);
+
+            // Touch swipe
+            let touchStartX = 0;
+            let touchEndX = 0;
+            slider.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+            slider.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                const dx = touchEndX - touchStartX;
+                if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); startAuto(); }
+            }, { passive: true });
+
+            // Keyboard
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowRight') { next(); startAuto(); }
+                else if (e.key === 'ArrowLeft') { prev(); startAuto(); }
+            });
+
+            goTo(0);
+            startAuto();
+        })();
+    </script>
+</body>
+</html>
